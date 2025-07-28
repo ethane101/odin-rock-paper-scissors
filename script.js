@@ -11,3 +11,7 @@ function getComputerChoice() {
             return "unexpected behavior"
     }
 }
+
+function getHumanChoice() {
+    return prompt("Choose rock, paper, or scissors: ");    
+}
