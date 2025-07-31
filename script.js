@@ -18,57 +18,70 @@ function getHumanChoice() {
     return prompt("Choose rock, paper, or scissors: ").toLowerCase();    
 }
 
-// plays a full game with 5 rounds
-// declares the winner at the end (and also returns the result)
-function playGame() {
-    // move playRound function and score variables into function scope
-    // global score variables
-    let humanScore = 0;
-    let computerScore = 0;
-    // control flow for playing one round of the game
-    function playRound(humanChoice, computerChoice) {
-        // see who wins the round
-        let winningPairs = {"rock" : "scissors", "scissors" : "paper", "paper":"rock"};
-        let winner = ""; // set to "human", "computer", or "tie"
+// play a single round
+function playRound(humanChoice, computerChoice) {
+    // see who wins the round
+    let winningPairs = {"rock" : "scissors", "scissors" : "paper", "paper":"rock"};
+    let winner = ""; // set to "human", "computer", or "tie"
 
-        if (winningPairs[humanChoice] == computerChoice) {
-            winner = "human";
-        } else if (winningPairs[computerChoice] == humanChoice) {
-            winner = "computer";
-        } else {
-            winner = "tie";
-        }
-        
-        // award points based on who wins
-        if (winner != "tie") {
-            if (winner == "human") {
-                humanScore++;
-            } else {
-                computerScore++;
-            }
-        }
-    }
-
-    // call playRound 5 times
-    const numRounds = 5;
-    for (let i = 0; i < numRounds; i++) {
-        const humanChoice = getHumanChoice();
-        const computerChoice = getComputerChoice();
-        console.log(`Round ${i + 1}: ${humanChoice} VS. ${computerChoice}`)
-        playRound(humanChoice, computerChoice);
-    }
-
-    // declare the winner or if there's a tie
-    if (humanScore == computerScore) {
-        console.log("Tie!");
-        return "tie";
-    } else if (humanScore > computerScore) {
-        console.log("You win!");
-        return "human";
+    // decide winner message
+    if (winningPairs[humanChoice] == computerChoice) {
+        winner = "YOU WIN! :)";
+    } else if (winningPairs[computerChoice] == humanChoice) {
+        winner = "YOU LOSE! :(";
     } else {
-        console.log("The computer won!");
-        return "computer";
+        winner = `IT'S A TIE! :))`;
     }
+
+    return winner;
 }
 
-playGame();
+const control = document.querySelector("#control");
+const winningResult = document.querySelector("#winning-result");
+const computerChoiceDisplay = document.querySelector("#computer-choice");
+const humanScoreDisplay = document.querySelector("#human-score-display");
+const computerScoreDisplay = document.querySelector("#computer-score-display");
+
+let humanScore = 0;
+let computerScore = 0;
+
+control.addEventListener('click', (event) => {
+    let target = event.target;
+    let humanChoice = target.id;
+    let computerChoice = getComputerChoice();
+
+    // update scores section
+    let winnerMessage = playRound(humanChoice, computerChoice);
+    winningResult.textContent = winnerMessage;
+    computerChoiceDisplay.innerHTML = `Computer chose: <b>${computerChoice}</b>`;
+
+    // award points based on who wins
+    if (winnerMessage != `IT'S A TIE! :))`) {
+        if (winnerMessage == "YOU WIN! :)") {
+            humanScore++;
+        } else {
+            computerScore++;
+        }
+    }
+
+    // update scores section
+    humanScoreDisplay.textContent = `Human: ${humanScore}`;
+    computerScoreDisplay.textContent = `Human: ${computerScore}`;
+
+});
+
+// In our UI, the player should be able to play the game 
+// by clicking on buttons rather than typing their answer in a prompt:
+
+// 1. For now, remove the logic that plays exactly five rounds.
+
+// 2. Create three buttons, one for each selection. 
+// Add an event listener to the buttons that call your playRound 
+// function with the correct playerSelection every time a button 
+// is clicked. (you can keep the console.logs for this step)
+
+// 3. Add a div for displaying results and change all of your console.logs 
+// into DOM methods.
+
+// 4. Display the running score, and announce a winner of the game once 
+// one player reaches 5 points.
